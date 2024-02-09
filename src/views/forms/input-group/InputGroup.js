@@ -143,21 +143,20 @@ const Select = (props) => {
         <CCol xs>
           <CCard className="mb-4">
             <CCardHeader>
-              <strong>division History</strong>
+              <strong>Batch History</strong>
             </CCardHeader>
             <CCardBody>
               <CTable align="middle" className="mb-0 border" hover responsive>
                 <CTableHead color="light">
-                  <CTableRow>
+                  <CTableRow className='text-center'>
                     <CTableHeaderCell>Batch Name</CTableHeaderCell>
-                    
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
                   {batches.map((item, index) => (
                     <CTableRow v-for="item in tableItems" key={index}>
                       <CTableDataCell>
-                        <div>{item.batch_name}</div>
+                        <div className='text-center'>{item.division.division_name} | {item.batch_name}</div>
                       </CTableDataCell>
                     </CTableRow>
                   ))}

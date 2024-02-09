@@ -8,46 +8,22 @@ import {
   CCardBody,
   CCardHeader,
   CCol,
-  CRow,
-  CTable,
-  CTableBody,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
-  CFormCheck,
-  CTableDataCell,
-  CToast,
-  CToastHeader,
-  CToastBody,
+  CRow,  
   CForm,
-  CFormInput,
-  CFormFeedback,
+  CFormInput,  
   CFormLabel,
   CFormSelect,
 } from '@coreui/react'
 import axios from 'axios';
-import base_url from 'src/base_url';
-import { Store } from '../forms/validation/store';
 import { useNavigate } from 'react-router-dom';
 import { APIMiddleware } from 'src/global_function/GlobalFunctions';
-import { showAlert } from 'src/global_function/GlobalFunctions'
-function SetLecture({ visible, setVisible, scheduleObj, lectureObj , currentSelectSemester , setupdate_timetable }) {
-  
-
-  const { state, dispatch: ctxDispatch } = useContext(Store);
-  const { accessToken, refreshToken, batches, currentBatch , objectCount } = state
-  const navigate = useNavigate()
+function SetLecture({ visible, setVisible , sechedule}) {      
   const [classroom, setclassroom] = useState([]);
   const [subjects, setsubjects] = useState([]);
   const [teacher, setteacher] = useState([]);
   const [classroom_slug, setclassroom_slug] = useState(null);
   const [subject_slug, setsubject_slug] = useState(null);
   const [teacher_slug, setteacher_slug] = useState(null);
-
-
-  useEffect(() => {
-    console.log(teacher_slug);
-  }, [teacher_slug]);
   const load_object_for_lecture = async()=>{
     const header = {
       "Content-Type":"application/json",        
@@ -55,7 +31,7 @@ function SetLecture({ visible, setVisible, scheduleObj, lectureObj , currentSele
     }
     const axiosInstance = axios.create()
     let endpoint = `/manage/timetable/get_objects_for_lecture`;let method='get';let headers = header;
-    let response_obj = await APIMiddleware(axiosInstance,endpoint,method,headers,null,{semester_slug : currentSelectSemester})
+    let response_obj = await APIMiddleware(axiosInstance,endpoint,method,headers,null,)
     if(response_obj.error == false){
       let response = response_obj.response      
       setclassroom(response.data.classrooms)
@@ -73,6 +49,17 @@ function SetLecture({ visible, setVisible, scheduleObj, lectureObj , currentSele
       })
   }
 
+  const handleSelectChange = (event) => {
+    const options = event.target.options;
+    const selectedValues = [];
+    for (let i = 0; i < options.length; i++) {
+      if (options[i].selected) {
+        selectedValues.push(options[i].value);
+      }
+    }
+    console.log(selectedValues)
+  };
+
   const handelsubmit = async (event) =>{
     event.preventDefault()
     if(classroom_slug !== ""  && subject_slug !== "" && teacher_slug !== ""){
@@ -82,21 +69,22 @@ function SetLecture({ visible, setVisible, scheduleObj, lectureObj , currentSele
         }
         const axiosInstance = axios.create()
         let endpoint = `/manage/timetable/set_lecture_attributes`;let method='post';let headers = header;
-        const body = {
-          lecture_slug: lectureObj.slug,
-          teacher_id:teacher_slug,
-          subject_slug:subject_slug,
-          classroom_slug: classroom_slug,
-        }
-        let response_obj = await APIMiddleware(axiosInstance,endpoint,method,headers,body,null)
-        if(response_obj.error == false){
-          let response = response_obj.response
-          setupdate_timetable(preval=> preval+1)
-          setVisible(false)
-        }else{  
-          console.log(response_obj.error)
-        }    
-        showAlert("success","Lecture Added successfully...!")
+        
+        // const body = {
+        //   lecture_slug: lectureObj.slug,
+        //   teacher_id:teacher_slug,
+        //   subject_slug:subject_slug,
+        //   classroom_slug: classroom_slug,
+        // }
+        // let response_obj = await APIMiddleware(axiosInstance,endpoint,method,headers,body,null)
+        // if(response_obj.error == false){
+        //   let response = response_obj.response
+        //   //setupdate_timetable(preval=> preval+1)
+        //   setVisible(false)
+        // }else{  
+        //   console.log(response_obj.error)
+        // }    
+        // showAlert("success","Lecture Added successfully...!")
       }
   }
   const setDefaultValue = ()=>{
@@ -105,12 +93,12 @@ function SetLecture({ visible, setVisible, scheduleObj, lectureObj , currentSele
     document.getElementById('classroom_select').options[0].selected=true
   }
 
-  useEffect( () => {
-    if (visible) {
-        setDefaultValue()
-       load_object_for_lecture()
-    }
-  }, [visible])
+  // useEffect( () => {
+  //   if (visible) {
+  //       setDefaultValue()
+  //      load_object_for_lecture()
+  //   }
+  // }, [visible])
   return (
     <>
       <COffcanvas className='card w-100' style={{ background: '#3c4b64' }} placement="end" visible={visible} onHide={() => setVisible(false)} data-coreui-backdrop="static">
@@ -123,7 +111,7 @@ function SetLecture({ visible, setVisible, scheduleObj, lectureObj , currentSele
           </button>
         </COffcanvasHeader>
         <COffcanvasHeader className='card-header text-light' style={{ background: '#303c54' }}>
-          <COffcanvasTitle>Day: {scheduleObj.day} | Slot: {lectureObj.start_date} - {lectureObj.end_time}</COffcanvasTitle>
+          <COffcanvasTitle>Day: {sechedule.day}</COffcanvasTitle>
         </COffcanvasHeader>
         <COffcanvasBody>
           <CRow>
@@ -137,7 +125,24 @@ function SetLecture({ visible, setVisible, scheduleObj, lectureObj , currentSele
                     className="row g-3 needs-validation"
                     noValidate
                   >
-                    <CCol md={12}>
+                    <CCol md={6}>
+                      <CFormLabel htmlFor="validationCustom02">Select Start time</CFormLabel>
+                      <CFormInput type="time" id="validationCustom01" required onChange={e => set_start_time(e.target.value)}/>
+                    </CCol>
+                    <CCol md={6}>
+                      <CFormLabel htmlFor="validationCustom02">Select End time</CFormLabel>
+                      <CFormInput type="time" id="validationCustom01" required  onChange={e => set_end_time(e.target.value)}/>
+                    </CCol>
+                    <CCol md={6}>
+                      <CFormLabel htmlFor="validationCustom02">Select Lecture Type</CFormLabel>
+                      <CFormSelect autoComplete='off' id='classroom_select' aria-label="Default select example" onClick={e=>set_lecture_type(e.target.value)}>
+                      <option value="">Select Lecture Type</option>
+                      <option value="lecture">Lecture</option>
+                      <option value="lab">Lab</option>
+                      </CFormSelect>
+                    </CCol>
+                    
+                    <CCol md={6}>
                       <CFormLabel htmlFor="validationCustom02">Select Classroom</CFormLabel>
                       <CFormSelect autoComplete='off' id='classroom_select' aria-label="Default select example" onChange={e => setclassroom_slug(e.target.value)}>
                       <option value="">Select classroom</option>
@@ -175,6 +180,13 @@ function SetLecture({ visible, setVisible, scheduleObj, lectureObj , currentSele
                           ))
                           ) : null
                         }
+                      </CFormSelect>
+                    </CCol>
+                    <CCol md={12}>
+                      <CFormLabel htmlFor="validationCustom02" >Select Batch</CFormLabel>
+                      <CFormSelect autoComplete='off' id='classroom_select' aria-label="Default select example" multiple={true} onChange={handleSelectChange} defaultChecked={false}>
+                      <option value="1">Select classroom</option> 
+                      <option value="2">Select classroom</option>
                       </CFormSelect>
                     </CCol>
                     <CCol xs={12}>

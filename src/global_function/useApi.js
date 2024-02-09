@@ -15,8 +15,7 @@ const useAPI = () => {
     refreshToken
   }
   const CallAPI = async (tokens=StoredTokens,reqInstance, endpoint, method, headers, body = null, params = null) => {
-    headers['Authorization'] = `Bearer ${tokens.accessToken}`;
-    console.log(headers)
+    headers['Authorization'] = `Bearer ${tokens.accessToken}`;    
     try {
       const response = await makeRequest(reqInstance, endpoint, method, headers, body, params);
       return { error: false, response };

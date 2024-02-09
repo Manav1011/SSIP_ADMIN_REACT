@@ -34,7 +34,7 @@ const CustomStyles = (set_Subjects,semester) => {
     const [subject_name, set_subject_name] = useState("")
     const [subject_code, set_subject_code] = useState("")
     const [subject_credit, set_subject_credit] = useState("")
-
+    const [currentSelectSemester,setcurrentSelectSemester] = useState("")
     const { state, dispatch: ctxDispatch } = useContext(Store);
     const { accessToken,refreshToken } = state
     const navigate = useNavigate()
@@ -44,11 +44,11 @@ const CustomStyles = (set_Subjects,semester) => {
         'ngrok-skip-browser-warning':true
       }
       const axiosInstance = axios.create()
-      let endpoint = `/manage/add_subjects`;let method='post';let headers = header;
+      let endpoint = `/manage/add_subject/`;let method='post';let headers = header;
       let response_obj = await APIMiddleware(axiosInstance,endpoint,method,headers,body,null)
       if(response_obj.error == false){
           let response = response_obj.response
-          set_Subjects(prevArray => [...prevArray, response.data.subject])
+          set_Subjects(prevArray => [...prevArray, response.data.data])
         }else{  
           console.log(response_obj.error)
         }    
@@ -62,9 +62,10 @@ const CustomStyles = (set_Subjects,semester) => {
       }
       setValidated(true)
       const body = {
+        "code": subject_code,
         "subject_name": subject_name,
-        "subject_code": subject_code,
-        "subject_credit": subject_credit
+        "credit": subject_credit,
+        "semester_slug":currentSelectSemester,
       }
       event.preventDefault()
       add_batch(body)
@@ -87,7 +88,7 @@ const CustomStyles = (set_Subjects,semester) => {
         <CFormSelect
                 aria-label="Default select example"
                 onChange={(e) => {
-                  //setcurrentSelectSemester(e.target.value)
+                  setcurrentSelectSemester(e.target.value)
                 }}
               >
                 <option value="">Select Semester</option>
@@ -119,7 +120,7 @@ const CustomStyles = (set_Subjects,semester) => {
 
 const Subject = () => {
 
-    const [Subjects, set_Subjects] = useState([])
+    const [subjects, set_Subjects] = useState([])
     const [semester,set_semester] = useState([])
     //costom hook to call the API
 
@@ -131,12 +132,12 @@ const Subject = () => {
             'ngrok-skip-browser-warning':true
           }
           const axiosInstance = axios.create()
-          let endpoint = `/manage/get_subjects`;let method='get';let headers = header;
+          let endpoint = `/manage/get_subject`;let method='get';let headers = header;
           let response_obj = await CallAPI(StoredTokens,axiosInstance,endpoint,method,headers,null,null)
           if(response_obj.error == false){
           let response = response_obj.response
-          //console.log(response.data.data)
-          // set_Subjects(response.data.data)
+          console.log(response)
+          set_Subjects(response.data.data)
         }else{  
           console.log(response_obj.error)
         }   
@@ -159,7 +160,7 @@ const Subject = () => {
     }
 
     useEffect(() => {
-        //load_subject()
+        load_subject()
         load_semester()
     }, [])
     
@@ -183,7 +184,7 @@ const Subject = () => {
               <strong>Subject History</strong>
             </CCardHeader>
             <CCardBody>
-              {/* <CTable align="middle" className="mb-0 border" hover responsive>
+              <CTable align="middle" className="mb-0 border" hover responsive>
                 <CTableHead color="light">
                   <CTableRow>
                     <CTableHeaderCell>Subject Name</CTableHeaderCell>
@@ -191,6 +192,7 @@ const Subject = () => {
                     <CTableHeaderCell>Subject Credit</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
+                {console.log(subjects)}
                 <CTableBody>
                   {subjects.map((item, index) => (
                     <CTableRow v-for="item in tableItems" key={index}>
@@ -206,7 +208,7 @@ const Subject = () => {
                     </CTableRow>
                   ))}
                 </CTableBody>
-              </CTable> */}
+              </CTable>
             </CCardBody>
           </CCard>
         </CCol>

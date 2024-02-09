@@ -65,7 +65,7 @@ const CustomStyles = (set_semester,setBatchCout) => {
         setBatchCout(preValue => preValue + 1);
       }else{  
         console.log(response_obj.error)
-      }    
+      }
   }
 
   const handleSubmit = (event) => {
@@ -181,7 +181,7 @@ const loadBatches = async() => {
               <CTable align="middle" className="mb-0 border text-center" hover responsive>
                 <CTableHead color="light">
                   <CTableRow>
-                    <CTableHeaderCell>Smester No</CTableHeaderCell>
+                    <CTableHeaderCell>Semester No</CTableHeaderCell>
                     <CTableHeaderCell>Start Year</CTableHeaderCell>
                     <CTableHeaderCell>End Year</CTableHeaderCell>
                     <CTableHeaderCell>Activation Status</CTableHeaderCell>
