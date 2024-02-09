@@ -21,10 +21,11 @@ const Timetable = () => {
   const [Semesters, setSemesters] = useState(null)
   const [division, set_division] = useState(null)
   const [currentSelectSemester, setcurrentSelectSemester] = useState(null)
-  const [sechedule, set_sechedule] = useState(null)
+  const [schedule, set_sechedule] = useState(null)
   const [StoredTokens, CallAPI] = useAPI()
   const [time_table, set_time_table] = useState(null)
   const [visible, setVisible] = useState(false)
+  const [lectureConfigs,setLectureConfigs] = useState(null)
   const load_semester = async (batchslug) => {
     const header = {
       'Content-Type': 'application/json',
@@ -43,6 +44,24 @@ const Timetable = () => {
     }
   }
 
+  const showLectureModal = async (schedule) => {      
+  const header = {
+      'Content-Type': 'application/json',
+      'ngrok-skip-browser-warning': true,
+    }
+    const axiosInstance = axios.create()
+    let endpoint = `/manage/get_lecture_configs`
+    let method = 'get'
+    let headers = header
+    let response_obj = await CallAPI(StoredTokens, axiosInstance, endpoint, method, headers,null,{ schedule_slug: schedule.slug })
+    if(response_obj.error ===false){
+        setVisible(true)
+        set_sechedule(schedule)
+        setLectureConfigs(response_obj.response.data.data)
+    }else{
+        alert(response_obj.errorMessage.message);        
+    }
+  }
   const load_division = async (semester_slug) => {
     if (semester_slug != ' ') {
       const headers = {
@@ -155,9 +174,9 @@ const Timetable = () => {
       </CRow>
       {time_table ? (
         <>
-          <CRow className='text-center mb-5'>
+          <CRow className='text-center mb-5 justify-content-center'>
             <CCol className='col-lg-10 col-md-10 col-sm-12 col-xs-12'>
-              <CCard className="bg-dark text-light">
+              <CCard className="">
                 <CCardHeader>
                   Division - {time_table ? time_table.division.division_name : ''}
                 </CCardHeader>
@@ -166,14 +185,13 @@ const Timetable = () => {
                     {time_table ? (
                         time_table.schedules.map((item, index) => (
                         <>
-                          <CCol className="mb-4 d-flex align-items-center flex-column" key={index}>                            
+                          <CCol className="mb-4 d-flex align-items-center flex-column" key={index}>                        
                               <CAlert className="m-0 rounded-0 w-100 p-2 d-flex justify-content-between align-items-center" color="primary" visible={true} onClose={() => setVisible(false)}>
                                   {item.day.toUpperCase()}
                                   <button
                                     className="h-20 btn"
                                     onClick={() => {
-                                      setVisible(true)
-                                      set_sechedule(item)
+                                      showLectureModal(item)
                                     }}
                                   >
                                     <svg
@@ -223,8 +241,7 @@ const Timetable = () => {
                                 </CRow>
                               </CCardBody>
                             </CCard>
-                          </CCol>
-                          <SetLecture visible={visible} setVisible={setVisible} sechedule={item} /></>
+                          </CCol></>
                         ))                     
                     ) : (
                       <p>no schedule</p>
@@ -249,6 +266,7 @@ const Timetable = () => {
           ) : null}
         </CToast>
       )}
+      {schedule && <SetLecture visible={visible} setVisible={setVisible} sechedule={schedule} lectureConfigs={lectureConfigs}/>}
     </>
   )
 }
