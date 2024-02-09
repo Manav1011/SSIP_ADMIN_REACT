@@ -36,17 +36,12 @@ import {
 } from '@coreui/react'
 import { showAlert } from 'src/global_function/GlobalFunctions'
 import Swal from 'sweetalert'
-const CustomStyles = (setTeacherlist) => {
+  const CustomStyles = (setTeacherlist) => {
   const [validated, setValidated] = useState(false)
   const navigate = useNavigate()
   const { state, dispatch: ctxDispatch } = useContext(Store)
   const { accessToken, refreshToken, currentBatch } = state
   const [StoredTokens, CallAPI] = useAPI()
-  const [Teacher_name, setTeacher_name] = useState('')
-  const [Teacher_email, setTeacher_email] = useState('')
-  const [Teacher_ph, setTeacher_ph] = useState('')
-  const [Teacher_password, setTeacher_password] = useState('')
-  // console.log(currentBatch);
   const add_Teacher = async (body) => {
     const headers = {
       'Content-Type': 'application/json',
@@ -62,10 +57,11 @@ const CustomStyles = (setTeacherlist) => {
       method,
       headers,
       body,
-      null,
     )
     if (response_obj.error == false) {
+      
       let response = response_obj.response
+      console.log(response.data.data)
       setTeacherlist((prevArray) => [...prevArray, response.data.data])
     } else {
       console.log(response_obj.error)
@@ -78,6 +74,7 @@ const CustomStyles = (setTeacherlist) => {
     if (form.checkValidity() === false) {
       event.preventDefault()
       event.stopPropagation()
+      return
     }
     const name = event.target.tname.value
     const ph_no = event.target.tmobile.value
@@ -145,6 +142,7 @@ const CustomStyles = (setTeacherlist) => {
 }
 
 const Teacher = () => {
+  const [StoredTokens, CallAPI] = useAPI()
   const [isModalOpen, setModalOpen] = useState(false)
   const [visible, setVisible] = useState(false)
   const [SelectedTeacher, setSelectedTeacher] = useState(null)
@@ -156,25 +154,24 @@ const Teacher = () => {
   const { state, dispatch: ctxDispatch } = useContext(Store)
   const { accessToken, refreshToken } = state
   const load_teacher = async () => {
-    const header = {
+    const headers = {
       'Content-Type': 'application/json',
       'ngrok-skip-browser-warning': true,
     }
     const axiosInstance = axios.create()
-    let endpoint = `/manage/get_teachers`
+    let endpoint = `/manage/get_teacher`
     let method = 'get'
-    let headers = header
-    let response_obj = await APIMiddleware(axiosInstance, endpoint, method, headers)
+    let response_obj = await CallAPI(StoredTokens,axiosInstance, endpoint, method, headers)
     if (response_obj.error == false) {
       let response = response_obj.response
-      setTeacherlist(response.data.teachers)
+      setTeacherlist(response.data.data)
     } else {
       console.log(response_obj.error)
     }
   }
 
   useEffect(() => {
-    //  load_teacher()
+      load_teacher()
   }, [])
 
   const checkboxOptions = ['Option 1', 'Option 2', 'Option 3']
