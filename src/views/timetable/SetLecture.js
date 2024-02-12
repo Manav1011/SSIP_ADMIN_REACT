@@ -103,7 +103,7 @@ useEffect(() => {
             </div>
             <div className="mb-3">
               <label className="form-label">Select Batch</label>
-              <select multiple class="form-select" size="3" aria-label="size 3 select example" {...register("batches")}> 
+              <select multiple className="form-select" size="3" aria-label="size 3 select example" {...register("batches")}> 
                 {Batches &&
                   Batches.map((item, index) => (
                     <option key={index} value={item.id}>

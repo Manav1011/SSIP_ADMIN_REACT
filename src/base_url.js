@@ -1,4 +1,4 @@
-const base_url= "http://localhost:8000";
+const base_url= "https://f4a9-2405-201-2024-b862-ab1a-6340-a296-1bad.ngrok-free.app";
 
 // const token = localStorage.getItem('accessToken')
 // const header = {
