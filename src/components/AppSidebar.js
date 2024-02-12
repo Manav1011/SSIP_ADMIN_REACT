@@ -20,8 +20,9 @@ import navigation from '../_nav'
 const AppSidebar = () => {
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { accessToken, refreshToken, profileDetails } = state
-  console.log("here")
-  
+
+
+
   const dispatch = useDispatch()
   const unfoldable = useSelector((state) => state.sidebarUnfoldable)
   const sidebarShow = useSelector((state) => state.sidebarShow)
@@ -39,10 +40,21 @@ const AppSidebar = () => {
       <img className="p-3" src={smartrollicon}></img>
       <CSidebarNav>
         <SimpleBar>
-          {
-            console.log(profileDetails.admin_obj.profile.role,"nes")
-          }
-          <AppSidebarNav items={profileDetails.admin_obj.profile.role == "admin" ? navigation.admin_role : navigation.teacher_role} />
+          {profileDetails.obj.profile.role === "admin" && (
+            <AppSidebarNav
+              items={navigation.admin_role}
+            />
+          )}
+          {profileDetails.obj.profile.role === "teacher" && (
+            <AppSidebarNav
+              items={navigation.teacher_role}
+            />
+          )}
+          {profileDetails.obj.profile.role === "student" && (
+            <AppSidebarNav
+              items={navigation.student_role}
+            />
+          )}
         </SimpleBar>
       </CSidebarNav>
     </CSidebar>

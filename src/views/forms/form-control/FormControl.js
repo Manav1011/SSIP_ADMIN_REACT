@@ -4,7 +4,7 @@ import { useContext } from 'react'
 import PropTypes from 'prop-types'
 import axios from 'axios'
 import { Store } from '../validation/store'
-import base_url from 'src/base_url'
+import {base_url} from 'src/base_url'
 import {
   CButton,
   CCard,
@@ -56,8 +56,7 @@ const CustomStyles = (set_divisions, semester_slug) => {
       changeCount.division += 1  
         set_divisions(prevArray => [...prevArray, response.data.data])
       showAlert("success","Semester Added successfully...!")
-    }else{  
-      console.log(response_obj.errorMessage.message)
+    }else{        
       alert(response_obj.errorMessage.message)
     }    
   }
@@ -114,10 +113,9 @@ const FormControl = (props) => {
     let response_obj = await APIMiddleware(axiosInstance,endpoint,method,headers,null,{semester_slug: semester_slug })
     if(response_obj.error == false){
       let response = response_obj.response      
-        set_divisions(response.data.data)
-        console.log(response.data.data);
-    }else{  
-      console.log(response_obj.error)
+        set_divisions(response.data.data)        
+    }else{        
+      alert(response_obj.errorMessage.message)
     }
   }
 

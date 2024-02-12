@@ -1,23 +1,11 @@
-import {React, useState, useEffect} from 'react'
+import {React, useEffect} from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-import base_url from 'src/base_url'
-import {
-  CButton,
-  CCol,
-  CContainer,
-  CFormInput,
-  CInputGroup,
-  CInputGroupText,
-  CRow,
-} from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import { cilMagnifyingGlass } from '@coreui/icons'
+import {base_url} from 'src/base_url'
+import '../../../css/tailwind.css'
+import { Link } from 'react-router-dom'
 
 const Page404 = () => {
-
-  const [_404,set404] = useState(true)
-
   const navigate = useNavigate();  
   const checkServerAvaibility = ()=> {
     const header = {
@@ -25,43 +13,37 @@ const Page404 = () => {
       'ngrok-skip-browser-warning':true
     }
     axios.get(`${base_url}/check_server_avaibility/`,{headers:header})
-    .then((response)=>{
-      set404(false) 
+    .then((response)=>{      
       navigate('/')
     })
     .catch((error)=>{             
       navigate("/404")
     })
   }
-  useEffect(() => {
-    if(_404){      
-      checkServerAvaibility()
-    }
+  useEffect(() => {       
+      checkServerAvaibility()    
   },[])
 
   return (
-    <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
-      <CContainer>
-        <CRow className="justify-content-center">
-          <CCol md={6}>
-            <div className="clearfix">
-              <h1 className="float-start display-3 me-4">404</h1>
-              <h4 className="pt-3">Oops! You{"'"}re lost.</h4>
-              <p className="text-medium-emphasis float-start">
-                The page you are looking for was not found.
-              </p>
-            </div>
-            <CInputGroup className="input-prepend">
-              <CInputGroupText>
-                <CIcon icon={cilMagnifyingGlass} />
-              </CInputGroupText>
-              <CFormInput type="text" placeholder="What are you looking for?" />
-              <CButton color="info">Search</CButton>
-            </CInputGroup>
-          </CCol>
-        </CRow>
-      </CContainer>
-    </div>
+    <main class="h-screen w-full flex flex-col justify-center items-center bg-[#1A2238]">
+        <h1 class="text-9xl font-extrabold text-white tracking-widest">404</h1>
+        <div class="bg-[#FF6A3D] px-2 text-sm rounded rotate-12 absolute">
+            Page Not Found
+        </div>
+        <button class="mt-5">
+          <a
+            class="relative inline-block text-sm font-medium text-[#FF6A3D] group active:text-orange-500 focus:outline-none focus:ring"
+          >
+            <span
+              class="absolute inset-0 transition-transform translate-x-0.5 translate-y-0.5 bg-[#FF6A3D] group-hover:translate-y-0 group-hover:translate-x-0"
+            ></span>
+    
+            <span class="relative block px-8 py-3 bg-[#1A2238] border border-current">
+              <Link to="/">Go Home</Link>
+            </span>
+          </a>
+        </button>
+    </main>
   )
 }
 

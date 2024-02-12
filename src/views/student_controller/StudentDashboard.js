@@ -11,65 +11,67 @@ import {
   CToastHeader,
   CToastBody,
   CAlert,
-  CTable,
-  CTableHead,
 } from '@coreui/react'
 import axios from 'axios'
 import { useEffect } from 'react'
 import useAPI from 'src/global_function/useApi'
-import { Collapse } from '@coreui/coreui'
-import Sessionmanage from './Sessionmanage'
-import { useNavigate } from 'react-router-dom'
 
 
 
-export default function Teacherview() {
-
-  // usestate to opne and close the model
-
-  const [visible , setVisible] = useState(false)
-  const [session_data,set_session_data] = useState(null)
-  const navigation = useNavigate()
-
-  const [StoredTokens, CallAPI] = useAPI()
-  const [TimeTables, setTimeTables] = useState(null)
-  const load_teacher_timetable = async () => {
-    const headers = {
-      'Content-Type': 'application/json',
-      'ngrok-skip-browser-warning': true,
+const StudentDashboard = () => {
+    const [StoredTokens, CallAPI] = useAPI()
+    const [TimeTables, setTimeTables] = useState(null)
+    const load_teacher_timetable = async () => {
+      const headers = {
+        'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': true,
+      }
+      const axiosInstance = axios.create()
+      const response_obj = await CallAPI(
+        StoredTokens,
+        axiosInstance,
+        '/manage/get_timetable_for_student',
+        'get',
+        headers,
+        null,
+        null,
+      )
+      if (response_obj.error === false) {
+        const response = response_obj.response
+        console.log(response.data.data)
+        setTimeTables(response.data.data)
+      }
     }
-    const axiosInstance = axios.create()
-    const response_obj = await CallAPI(
-      StoredTokens,
-      axiosInstance,
-      '/manage/get_timetable_for_teacher',
-      'get',
-      headers,
-      null,
-      null,
-    )
-    if (response_obj.error === false) {
-      const response = response_obj.response
-      console.log(response.data.data)
-      setTimeTables(response.data.data)
+
+    const mark_attendance =async (lecture_slug)=>{
+        const headers = {
+          'Content-Type':"application/json",
+          'ngrok-skip-browser-warning': true,
+        } 
+        const axiosInstance = axios.create()
+        const response_obj = await CallAPI(StoredTokens,axiosInstance,"/manage/session/mark_attendance_for_student/","post",headers,{"lecture_slug":lecture_slug},null)
+        if(response_obj.error === false)
+        {
+          const response = response_obj.response
+          if(response.data.data === true)
+          {
+            alert("your Attendance Marked successfully")
+          }
+        }
+        else{
+          alert(response_obj.errorMessage.message)
+        }
     }
-    else{
-      alert(response_obj.errorMessage.message)
-    }
-  }
 
 
-  const create_Session = async(lecture_slug)=>{
-    navigation(`/sessionmanage?slug=${lecture_slug}`)
-  }
 
-  useEffect(() => {
-    load_teacher_timetable()
-  }, [])
-
-  return (
-    <>
-      <CRow className="mb-3">
+    useEffect(() => {
+      load_teacher_timetable()
+    }, [])
+  
+    return (
+      <>
+        <CRow className="mb-3">
       <CCol>
         {TimeTables ? (
           TimeTables.map((timetable, index) => (
@@ -151,11 +153,18 @@ export default function Teacherview() {
                                                       {' '}
                                                         </CCol>
                                                       </CRow>
-                                                      <CRow className='w-100'>
-                                                        <CCol>
-                                                          <button className='btn btn-outline-success w-100' value={lecture.slug} onClick={(e)=> create_Session(e.target.value)}>Start Session</button>
-                                                        </CCol>
-                                                      </CRow>
+                                                        <div className='d-flex flex-wrap w-100'>
+                                                      <div className='w-100 mt-3'>
+                                                      {
+                                                            (lecture.session.active === "pre" ||  lecture.session.active === "ongoing") && <button className='btn btn-outline-primary w-100 mt-3' value={lecture.slug} onClick={(e)=> mark_attendance(e.target.value)}>Mark Your Attendance</button>
+                                                            
+                                                          }
+                                                           {
+                                                            lecture.session.active === "post" && <button className='btn btn-outline-secondary w-100 mt-3' disabled={true}>Session Ended</button>
+                                                            
+                                                          }
+                                                        </div>
+                                                      </div>
                                                       
                                                       
                                                       <div>
@@ -204,6 +213,8 @@ export default function Teacherview() {
         </CCol>
       
       </CRow>
-    </>
-  )
+      </>
+    )
 }
+
+export default StudentDashboard

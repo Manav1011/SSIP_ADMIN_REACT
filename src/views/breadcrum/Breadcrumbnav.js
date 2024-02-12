@@ -12,10 +12,11 @@ import "../../scss/panel.css"
 const Breadcrumbnav = (props) => {
     const { state, dispatch: ctxDispatch } = useContext(Store);
     const { objectCount , profileDetails } = state  
-    console.log(objectCount)
+    // console.log(objectCount)
     const {currentStep , chageSteps }= props
     let breadcrumbs = {
-        semester: ["semester"],
+        term:["term"],
+        semester: ["term","semester"],
         division: ["semester","division"],
         batch: ["semester","division","batch"],
     }
@@ -41,7 +42,7 @@ const Breadcrumbnav = (props) => {
                                 </ol>                                                      
                             </nav>
 
-                            <span>Branch - {profileDetails.admin_obj.branches[0].branch_name}</span>
+                            <span>Branch - {profileDetails.obj.branch.branch_name}</span>
 
                             
                         </CCardBody>

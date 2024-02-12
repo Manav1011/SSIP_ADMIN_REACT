@@ -3,7 +3,7 @@ import { useState , useContext,useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Store } from 'src/views/forms/validation/store'
 import axios from 'axios'
-import base_url from 'src/base_url'
+import {base_url} from 'src/base_url'
 import expireToken from 'src/global_function/unauthorizedToken'
 import { APIMiddleware } from 'src/global_function/GlobalFunctions'
 import {
@@ -49,8 +49,7 @@ const CustomStyles = (set_Subjects,semester) => {
       if(response_obj.error == false){
           let response = response_obj.response
           set_Subjects(prevArray => [...prevArray, response.data.data])
-        }else{  
-          console.log(response_obj.error)
+        }else{            
         }    
     }
     
@@ -135,11 +134,9 @@ const Subject = () => {
           let endpoint = `/manage/get_subject`;let method='get';let headers = header;
           let response_obj = await CallAPI(StoredTokens,axiosInstance,endpoint,method,headers,null,null)
           if(response_obj.error == false){
-          let response = response_obj.response
-          console.log(response)
+          let response = response_obj.response          
           set_Subjects(response.data.data)
-        }else{  
-          console.log(response_obj.error)
+        }else{            
         }   
     }
     const load_semester = async()=>{
@@ -150,12 +147,10 @@ const Subject = () => {
       const axiosInstance = axios.create()
       const response_obje = await CallAPI(StoredTokens,axios,"/manage/get_semesters","get",headers,null,null)
       if(response_obje.error == false){
-        const response = response_obje.response
-        console.log(response.data)
+        const response = response_obje.response        
         set_semester(response.data.data)
       }
-      else{
-        console.log(response_obje.errorMessage.message)
+      else{        
       }
     }
 
@@ -191,8 +186,7 @@ const Subject = () => {
                     <CTableHeaderCell>Subject Code</CTableHeaderCell>
                     <CTableHeaderCell>Subject Credit</CTableHeaderCell>
                   </CTableRow>
-                </CTableHead>
-                {console.log(subjects)}
+                </CTableHead>                
                 <CTableBody>
                   {subjects.map((item, index) => (
                     <CTableRow v-for="item in tableItems" key={index}>

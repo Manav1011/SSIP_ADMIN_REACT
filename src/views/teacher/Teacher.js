@@ -3,7 +3,7 @@ import { useState, useContext, useEffect } from 'react'
 import 'src/scss/panel.css'
 import { Store } from '../forms/validation/store'
 import axios from 'axios'
-import base_url from 'src/base_url'
+import {base_url} from 'src/base_url'
 import { useSelector, useDispatch } from 'react-redux'
 import expireToken from 'src/global_function/unauthorizedToken'
 import ManageSubjects from './ManageSubjects'
@@ -63,8 +63,7 @@ import Swal from 'sweetalert'
       let response = response_obj.response
       console.log(response.data.data)
       setTeacherlist((prevArray) => [...prevArray, response.data.data])
-    } else {
-      console.log(response_obj.error)
+    } else {      
     }
   }
 
@@ -86,8 +85,7 @@ import Swal from 'sweetalert'
         icon: 'error',
         button: 'OK',
       })
-    } else {
-      console.log(name, ph_no, email)
+    } else {      
 
       const body = {
         name,

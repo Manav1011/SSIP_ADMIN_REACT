@@ -23,6 +23,7 @@ const Tooltips = React.lazy(() => import('./views/base/tooltips/Tooltips'))
 const Timetable = React.lazy(() => import('./views/timetable/Timetable'))
 const Subject = React.lazy(() => import('./views/subject/Subject'))
 const Teacherview = React.lazy(() => import('./views/teacher/Teacherview'));
+const Addstudent = React.lazy(() => import('./views/student_controller/Addstudent'));
 // Buttons
 const Buttons = React.lazy(() => import('./views/buttons/buttons/Buttons'))
 const ButtonGroups = React.lazy(() => import('./views/buttons/button-groups/ButtonGroups'))
@@ -41,6 +42,8 @@ const Teacher = React.lazy(()=> import('./views/teacher/Teacher'))
 const Breadcrumbnav = React.lazy(()=> import('./views/breadcrum/Breadcrumbnav'))
 const TeacherSidebar = React.lazy(()=> import('./views/teacher/TeacherSidebar'))
 const Charts = React.lazy(() => import('./views/charts/Charts'))
+const StudentDashboard =  React.lazy(() => import('./views/student_controller/StudentDashboard'))
+const Sessionmanage =  React.lazy(() => import('./views/teacher/Sessionmanage'))
 const Logout = React.lazy(()=> import('./views/pages/logout/Logout'))
 
 // Icons
@@ -109,7 +112,10 @@ const routes = [
   { path: '/logout',name:'Logout',element:Logout},
   { path: '/timetable',name:'Timetable',element:Timetable},
   { path: '/subject',name:'Subject',element:Subject},
-  
+  { path: '/addstudent',name:'AddStudent',element:Addstudent},
+  { path: '/teacherdashboard',name:'Teacherview',element:Teacherview},
+  { path: '/studentdashboard',name:'StudentDashboard',element:StudentDashboard}  ,
+  { path: '/sessionmanage',name:'Sessionmanage',element:Sessionmanage}  
 ]
 
  export default routes;

@@ -33,7 +33,7 @@ const AppHeaderDropdown = () => {
   
   useEffect(() => {
     if(profileDetails){
-      setadminEmail(profileDetails.admin_obj.profile.email)
+      setadminEmail(profileDetails.obj.profile.email)
     }
   }, [profileDetails]);
   const logoutAdmin = () => {

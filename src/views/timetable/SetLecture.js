@@ -5,19 +5,50 @@ import {
   CAlert,
 } from '@coreui/react'
 import { useForm } from "react-hook-form"
+import useAPI from 'src/global_function/useApi'
+import axios from 'axios'
 
-function SetLecture({ visible, setVisible, sechedule, lectureConfigs }) {    
+function SetLecture({ visible, setVisible, sechedule, lectureConfigs , schedule_list}) {    
   const [Classrooms, setClassroom] = useState(lectureConfigs.classrooms)
   const [Subjects, setSubjects] = useState(lectureConfigs.subjects)
   const [Teachers, setTeachers] = useState(lectureConfigs.teachers)
   const [Batches, setBatches] = useState(lectureConfigs.batches)
+  const [StoredTokens,CallAPI] = useAPI()
+
   const lectureForm = useRef()
   const { register, handleSubmit } = useForm();
-  const handleFormSubmit = (data) => {
-      console.log(data)
+  const handleFormSubmit = async (data) => {
+    if(data.start_time && data.end_time && data.teacher && data.subject && data.batches && data.classroom && data.type){
+      const axiosInstance = axios.create()
+      const body = data    
+      body.schedule_slug = sechedule.slug
+      const headers = {
+        "Content-Type":"application/json",
+        'ngrok-skip-browser-warning':true
+      }
+      const response_obj = await CallAPI(StoredTokens,axiosInstance,"/manage/add_lecture_to_schedule/","post",headers,body,null)
+      if(response_obj.error === false){
+        const response = response_obj.response
+        schedule_list(prevItems => {
+          return prevItems.map(item => {
+            if (item.slug === sechedule.slug) {
+              // Update the value array of the first item
+              return { ...item, lectures: [...item.lectures, response.data.data] };
+            }
+            return item; // Return unchanged item for other items
+          });
+        });
+        setVisible(!visible)
+         console.log(response.data.data)
+      }else{
+        alert(response_obj.errorMessage.message)
+      }
+    }else{
+      // console.log('here');
+    }
   };
 useEffect(() => {
-  console.log(lectureForm.current);
+  // console.log(lectureForm.current);
 }, [lectureForm])
 
   return (
@@ -61,7 +92,7 @@ useEffect(() => {
               <label className="form-label">Select Lecture Type</label>
               <select className="form-select" aria-label="Default select example" required {...register("type")}>
                 <option value="">....</option>
-                <option value={'lecture'}>Lecture</option>
+                <option value={'theory'}>Theory</option>
                 <option value={'lab'}>Lab</option>
               </select>
             </div>
@@ -95,7 +126,7 @@ useEffect(() => {
                 <option value="">....</option>
                 {Teachers &&
                   Teachers.map((item, index) => (
-                    <option key={index} value={item.id}>
+                    <option key={index} value={item.slug}>
                       {item.profile.name}
                     </option>
                   ))}
@@ -106,7 +137,7 @@ useEffect(() => {
               <select multiple className="form-select" size="3" aria-label="size 3 select example" {...register("batches")}> 
                 {Batches &&
                   Batches.map((item, index) => (
-                    <option key={index} value={item.id}>
+                    <option key={index} value={item.slug}>
                       {item.batch_name}
                   </option>
                   ))}

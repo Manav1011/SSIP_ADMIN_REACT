@@ -3,7 +3,7 @@ import { useState , useContext,useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Store } from '../validation/store'
 import axios from 'axios'
-import base_url from 'src/base_url'
+import {base_url} from 'src/base_url'
 import expireToken from 'src/global_function/unauthorizedToken'
 import { APIMiddleware } from 'src/global_function/GlobalFunctions'
 import {
@@ -50,16 +50,14 @@ const CustomStyles = (division_slug,set_batches) => {
     let endpoint = `/manage/add_batch/`;let method='post';let headers = header;
     let response_obj = await CallAPI(StoredTokens,axiosInstance,endpoint,method,headers,body,null)
     if(response_obj.error == false){
-        let response = response_obj.response
-        console.log(response.data.data)
+        let response = response_obj.response        
         let changeSubjectCount = {...objectCount}
-        changeSubjectCount.subjects += 1
-        console.log(changeSubjectCount);
+        changeSubjectCount.subjects += 1        
         ctxDispatch({ type: 'GET_OBJECTS', payload: changeSubjectCount })
         set_batches(prevArray => [...prevArray, response.data.data])
         showAlert("success","Batch Added successfully...!")
-      }else{  
-        console.log(response_obj.error)
+      }else{     
+        alert(response_obj.errorMessage.message)     
       }    
   }
   
@@ -119,8 +117,8 @@ const Select = (props) => {
     if(response_obj.error == false){
       let response = response_obj.response
       set_batches(response.data.data)
-    }else{  
-      console.log(response_obj.error)
+    }else{      
+      alert(response_obj.errorMessage.message)  
     }
   }
 

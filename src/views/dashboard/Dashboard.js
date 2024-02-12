@@ -15,13 +15,13 @@ import Select from '../forms/input-group/InputGroup'
 import Validation from '../forms/validation/Validation'
 import { useContext , useEffect } from 'react'
 import { Store } from 'src/views/forms/validation/store';
-import base_url from 'src/base_url'
+import {base_url} from 'src/base_url'
 import { APIMiddleware } from 'src/global_function/GlobalFunctions'
 import Breadcrumbnav from '../breadcrum/Breadcrumbnav';
 import useAPI from 'src/global_function/useApi'
-
+import Terms from '../forms/validation/Terms'
 const Dashboard = () => {
-  const [steps, setsteps] = useState('semester')
+  const [steps, setsteps] = useState('term')
   const [semester_slug, set_semester_slug] = useState("");
   const [semSlug, setsemSlug] = useState("");
   const [subSlug, setsubSlug] = useState("");
@@ -32,12 +32,11 @@ const Dashboard = () => {
   const { accessToken , refreshToken , profileDetails, objectCount } = state  
   const [division_slug, set_division_slug] = useState("")
   const [StoredTokens,CallAPI] = useAPI()
-
+  const [term_slug,set_term_slug] = useState("")
 
   useEffect(() => {               
-    if(profileDetails.admin_obj.profile.role === "admin"){
+    if(profileDetails.obj.profile.role === "admin"){
       getObjectCounts()
-        
     }
   }, []);
 
@@ -53,7 +52,7 @@ const Dashboard = () => {
       let response = response_obj.response
       ctxDispatch({ type: 'GET_OBJECTS', payload: response.data });
     }else{  
-      console.log(response_obj.error)
+      alert(response_obj.errorMessage.message)
     }
   }
   
@@ -61,6 +60,7 @@ const Dashboard = () => {
       setsteps(currentStep)
   }
   const progressExample = [
+    { title: 'Terms', value: objectCount.terms, nextStep:'semester' },
     { title: 'Semester', value: objectCount.semesters, nextStep:'semester' },
     { title: 'divison', value: objectCount.divisons, nextStep:'subject' },
     { title: 'Batches', value: objectCount.batches, nextStep:'batch'},
@@ -72,7 +72,7 @@ const Dashboard = () => {
       <WidgetsDropdown />
       <CCard className="mb-4">
         <CCardFooter>
-          <CRow xs={{ cols: 1 }} md={{ cols: 3 }} className="text-center">
+          <CRow xs={{ cols: 1 }} md={{ cols: 4 }} className="text-center">
             {progressExample.map((item, index) => (
               <CCol className="mb-sm-2 mb-0" key={index}>
                 <CButton style={{ backgroundColor: 'transparent', border: 'none' }}>
@@ -85,21 +85,23 @@ const Dashboard = () => {
             ))}
           </CRow>
         </CCardFooter>
-      </CCard>
-      {console.log(steps)}
+      </CCard>      
       {(() => {
         
         switch (steps) {
 
+          case 'term':
+            return <Terms chageSteps={chageSteps} set_term_slug={set_term_slug} setBatchCout={setbatchCount}></Terms>
+
           case 'semester':
-            return <Validation chageSteps={chageSteps}  set_semester_slug={set_semester_slug} setBatchCout={setbatchCount}></Validation>
+            return <Validation chageSteps={chageSteps} term_slug={term_slug}  set_semester_slug={set_semester_slug} setBatchCout={setbatchCount}></Validation>
             
           case 'division':
             return <FormControl chageSteps={chageSteps}  semester_slug={semester_slug} set_division_slug={set_division_slug}></FormControl>
           case 'batch':
             return <Select chageSteps={chageSteps} division_slug={division_slug} setsubSlug={setsubSlug}></Select>
           default:
-            console.log(steps)
+            {/* console.log(steps) */}
         }
       })()}
     </>

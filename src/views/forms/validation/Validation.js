@@ -25,11 +25,11 @@ import {
   CTableRow,
 } from '@coreui/react'
 import { Store } from '../validation/store'
-import base_url from 'src/base_url'
+import {base_url} from 'src/base_url'
 import expireToken from 'src/global_function/unauthorizedToken'
 import { showAlert } from 'src/global_function/GlobalFunctions'
 
-const CustomStyles = (set_semester,setBatchCout) => {
+const CustomStyles = (set_semester,setBatchCout,term_slug) => {
   
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { accessToken, refreshToken, batches, currentBatch, objectCount} = state
@@ -58,13 +58,12 @@ const CustomStyles = (set_semester,setBatchCout) => {
     if(response_obj.error == false){
         let response = response_obj.response
         let batchCount = {...objectCount}
-        batchCount.semesters += 1
-        console.log(batchCount);
+        batchCount.semesters += 1        
         ctxDispatch({ type: 'GET_OBJECTS', payload: batchCount });
         set_semester(prevArray => [...prevArray, response.data.data]);
         setBatchCout(preValue => preValue + 1);
-      }else{  
-        console.log(response_obj.error)
+      }else{       
+        alert(response_obj.errorMessage.message)   
       }
   }
 
@@ -77,9 +76,9 @@ const CustomStyles = (set_semester,setBatchCout) => {
     }
     setValidated(true)
     const body = {
+      "term_slug":term_slug,
       "no": semester_no,
-      "start_year": Start,
-      "end_year":EndYear
+      
     }
     addBatches(body)
     showAlert("success","Bactch Added successfully...!")
@@ -98,16 +97,6 @@ const CustomStyles = (set_semester,setBatchCout) => {
         <CFormInput type="number" min={1} max={8} step="1"   id="validationCustom01" onChange={e => set_semester_no(e.target.value)} required maxLength={1} />
         <CFormFeedback valid>Looks good!</CFormFeedback>
       </CCol>
-      <CCol md={6}>
-        <CFormLabel htmlFor="validationCustom01">Start Year</CFormLabel>
-        <CFormInput type="number" min={currentYear} max="2099" step="1" value={Start}  id="validationCustom01" onChange={e => setStart(e.target.value)} required maxLength={4} />
-        <CFormFeedback valid>Looks good!</CFormFeedback>
-      </CCol>
-      <CCol md={6}>
-        <CFormLabel htmlFor="validationCustom02">End Year</CFormLabel>
-        <CFormInput type="number" value={EndYear}  readOnly step="1" id="validationCustom02"   required maxLength={4}/>
-        <CFormFeedback valid>Looks good!</CFormFeedback>
-      </CCol>
       <CCol xs={12}>
         <button className='btn btn-outline-dark form-control' type="submit" >
           Submit form
@@ -122,6 +111,7 @@ const Validation = (props) => {
   const {chageSteps} = props
   const {set_semester_slug} = props
   const {setBatchCout} = props
+  const {term_slug} = props
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { accessToken, refreshToken, batches, currentBatch} = state
   const navigate = useNavigate()
@@ -136,14 +126,13 @@ const loadBatches = async() => {
     }
     const axiosInstance = axios.create()
     let endpoint = `/manage/get_semesters`;let method='get';let headers = header;
-    let response_obj = await CallAPI(StoredTokens,axiosInstance,endpoint,method,headers)
-    console.log(response_obj)
+    let response_obj = await CallAPI(StoredTokens,axiosInstance,endpoint,method,headers,null,{"term_slug":term_slug})    
     if(response_obj.error == false){
       let response = response_obj.response
       
       set_semester(response.data.data)
-    }else{  
-      console.log(response_obj.error)
+    }else{        
+      alert(response_obj.errorMessage.message)
     }    
   }
 
@@ -167,7 +156,7 @@ const loadBatches = async() => {
             <CCardHeader>
               <strong>Semesters</strong>
             </CCardHeader>
-            <CCardBody>{CustomStyles(set_semester,setBatchCout)}</CCardBody>
+            <CCardBody>{CustomStyles(set_semester,setBatchCout,term_slug)}</CCardBody>
           </CCard>
         </CCol>
       </CRow>
@@ -182,8 +171,6 @@ const loadBatches = async() => {
                 <CTableHead color="light">
                   <CTableRow>
                     <CTableHeaderCell>Semester No</CTableHeaderCell>
-                    <CTableHeaderCell>Start Year</CTableHeaderCell>
-                    <CTableHeaderCell>End Year</CTableHeaderCell>
                     <CTableHeaderCell>Activation Status</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
@@ -193,12 +180,7 @@ const loadBatches = async() => {
                       <CTableDataCell>
                         <div>{item.no}</div>   
                       </CTableDataCell>
-                      <CTableDataCell>
-                        <div>{item.start_year}</div>   
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        <div>{item.end_year}</div>   
-                      </CTableDataCell>
+                      
                       <CTableDataCell>
                         <div>
                           {item.status ? (<div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-check-circle-fill" viewBox="0 0 16 16">

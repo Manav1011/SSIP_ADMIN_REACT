@@ -1,5 +1,5 @@
 import axios from 'axios'
-import base_url from 'src/base_url'
+import {base_url} from 'src/base_url'
 
 import Swal from 'sweetalert';
 
@@ -55,7 +55,7 @@ const expireToken = async (refreshToken) => {
 };
 
 const showAlert = (title,text) => {
-    console.log("helo");
+    
     Swal({
         title: title,
         text: text,

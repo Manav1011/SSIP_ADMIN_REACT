@@ -1,5 +1,5 @@
 import axios  from "axios";
-import base_url from '../base_url';
+import {base_url} from '../base_url';
 
 const expireToken = async (refreshToken,setAccessTokenValid)=>{
     const header = {
@@ -14,7 +14,7 @@ const expireToken = async (refreshToken,setAccessTokenValid)=>{
         setAccessTokenValid(true)
     })
     .catch((error)=>{
-        console.log(error)
+        
     })
 }
 export default expireToken
