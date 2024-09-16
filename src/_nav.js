@@ -18,7 +18,7 @@ import { CNavItem, CNavTitle } from '@coreui/react'
 import { useContext } from 'react'
 
 const _nav = {
-  superadmin_role:[
+  superadmin_role: [
     {
       component: CNavTitle,
       name: 'ADMNISTRATION',
@@ -28,19 +28,21 @@ const _nav = {
       name: 'Dashboard',
       to: '/superadmin',
       icon: <CIcon icon={cilLibraryBuilding} customClassName="nav-icon" />,
-    },{
+    },
+    {
       component: CNavItem,
       name: 'Manage Events',
       to: '/superadmin/events',
       icon: <CIcon icon={cilCalendar} customClassName="nav-icon" />,
-    },{
+    },
+    {
       component: CNavItem,
       name: 'Logout',
-      to: '/logout',    
+      to: '/logout',
       icon: <CIcon icon={cilAccountLogout} customClassName="nav-icon" />,
-    }
+    },
   ],
-  admin_role:[    
+  admin_role: [
     {
       component: CNavItem,
       name: 'Dashboard',
@@ -146,12 +148,18 @@ const _nav = {
       name: 'Surveys',
       to: '/surveys',
       icon: <CIcon icon={cilClock} customClassName="nav-icon" />,
-    }, 
+    },
     {
       component: CNavItem,
       name: 'Ongoing Events',
       to: '/ongoing-events',
       icon: <CIcon icon={cilCalendar} customClassName="nav-icon" />,
+    },
+    {
+      component: CNavItem,
+      name: 'View Materials',
+      to: '/view-materials',
+      icon: <CIcon icon={cilFolderOpen} customClassName="nav-icon" />,
     },
     {
       component: CNavItem,

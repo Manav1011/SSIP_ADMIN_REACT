@@ -1,9 +1,9 @@
 import { useContext } from 'react'
-import {CAlert,CCardHeader, CCard, CCardBody, CCardFooter } from '@coreui/react'
-import { Store } from "src/views/forms/validation/store";
+import { CAlert, CCardHeader, CCard, CCardBody, CCardFooter } from '@coreui/react'
+import { Store } from 'src/views/forms/validation/store'
 function Results() {
-const { state } = useContext(Store);
-const { notifications } = state
+  const { state } = useContext(Store)
+  const { notifications } = state
   return (
     <>
       <CAlert
@@ -14,8 +14,9 @@ const { notifications } = state
         Exam Results
       </CAlert>
       <div>
-      {notifications?.results.length > 0 && notifications?.results.map((result,index) => (
-        <CCard className="my-4">
+        {notifications?.results.length > 0 &&
+          notifications?.results.map((result, index) => (
+            <CCard className="my-4" key={index}>
               <CCardHeader>
                 <h5 className="mb-2 text-xl font-semibold tracking-tight text-dark">
                   Subject - {result.subject.subject_name}
@@ -29,11 +30,9 @@ const { notifications } = state
                   Gained Marks - {result.gained_marks} / {result.total_marks}
                 </p>
               </CCardBody>
-              <CCardFooter>
-                Datetime - {result.created_at}
-              </CCardFooter>
+              <CCardFooter>Datetime - {result.created_at}</CCardFooter>
             </CCard>
-      ))}
+          ))}
       </div>
     </>
   )

@@ -37,10 +37,10 @@ export default function Teacherview() {
           branch_slug: branch.slug,
         }
         const lecture_list = []
-        branch.semesters.map((semester, index) => {
-          semester.divisions.map((division, idnex) => {
-            if (division.timetable.schedule.lectures.length > 0) {
-              division.timetable.schedule.lectures.map((lecture, index) => {
+        branch?.semesters?.map((semester, index) => {
+          semester?.divisions?.map((division, idnex) => {
+            if (division?.timetable?.schedule?.lectures?.length > 0) {
+              division?.timetable?.schedule?.lectures.map((lecture, index) => {
                 lecture_list.push({
                   ...lecture,
                   division_name: division.division_name,

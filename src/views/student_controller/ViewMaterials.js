@@ -14,23 +14,12 @@ import {
   CTableDataCell,
 } from '@coreui/react'
 import { CIcon } from '@coreui/icons-react'
-import {
-  cilCloudUpload,
-  cilAccountLogout,
-  cilArrowCircleBottom,
-  cilArrowCircleTop,
-} from '@coreui/icons'
-import Swal from 'sweetalert'
+import { cilArrowCircleBottom, cilArrowCircleTop } from '@coreui/icons'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
 import useAPI from 'src/global_function/useApi'
-import useDrivePicker from 'react-google-drive-picker'
 const ViewMaterials = () => {
   const {
-    handleSubmit,
-    control,
-    setValue,
-    watch,
     register,
     formState: { errors },
   } = useForm()

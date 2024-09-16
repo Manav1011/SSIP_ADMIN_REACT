@@ -85,7 +85,7 @@ const Subject = () => {
       null,
     )
     if (response_obj.error) {
-      alert(res.errorMessage.message)
+      alert(response_obj.errorMessage.message)
     } else {
       let batches = response_obj.response.data.data
       setBatches(batches)
@@ -362,9 +362,7 @@ const Subject = () => {
                               <CTableDataCell>
                                 <div>
                                   {item.included_batches
-                                    .map((batch, index) => (
-                                      batch.batch_name
-                                    ))
+                                    .map((batch, index) => batch.batch_name)
                                     .join(', ')}
                                 </div>
                               </CTableDataCell>
