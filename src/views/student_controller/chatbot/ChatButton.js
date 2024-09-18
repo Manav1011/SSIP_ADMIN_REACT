@@ -12,13 +12,16 @@ function ChatButton({ setVisible, visible }) {
             </div>
           )}
           <button
-            className={`relative bg-gray-900 transition-all duration-300 ease-linear hover:bg-blue-950 text-white rounded-full p-3 md:p-4 shadow-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 border-2 border-zinc-400
-              ${visible && 'transition-all duration-300 ease-in-out scale-110 rotate-12'}
+            className={`relative bg-gray-900 transition-all duration-300 ease-linear hover:bg-blue-950 text-white rounded-full p-3 md:p-4 shadow-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 border-2 border-zinc-400 
+              ${
+                visible &&
+                'transition-all duration-300 ease-in-out scale-110 rotate-12 bg-white border-none'
+              }
               `}
             onClick={() => setVisible((prev) => !prev)}
             aria-label="Open chat"
           >
-            <img src="./images/chat_icon.png" className="w-6 h-6 md:w-7 md:h-7 " alt="Chat icon" />
+            <img src="./images/chat_icon.png" className="w-6 h-6 md:w-8 md:h-8 " alt="Chat icon" />
           </button>
         </div>
       </div>

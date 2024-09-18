@@ -95,6 +95,7 @@ const ChatBox = ({ visible, setVisible }) => {
       if (!response_obj.error) {
         const data = response_obj.response?.data?.data
         console.log(data)
+        console.log(atob(data?.pie_chart_base64))
         setSelectedSubject(data)
         setMessages((prev) => [...prev, { type: 'bot', content: 'Here is your attendance report' }])
         setError(null)
@@ -175,22 +176,22 @@ const ChatBox = ({ visible, setVisible }) => {
   if (!visible) return null
 
   return (
-    <div className="fixed right-4 md:right-10  bg-gray-900 p-4 md:p-6 rounded-2xl border border-gray-700 w-[90%] md:w-[440px] h-[90vh] md:h-[600px] bottom-4 md:bottom-18 shadow-lg transition-all duration-300 ease-in-out opacity-100 flex flex-col ">
-      <div className="flex justify-between items-center pb-4 border-b border-gray-700">
+    <div className="fixed right-4 md:right-10  bg-white  rounded-2xl border border-gray-700 w-[90%] md:w-[440px] h-[90vh] md:h-[600px] bottom-4 md:bottom-18 shadow-lg transition-all duration-300 ease-in-out opacity-100 flex flex-col ">
+      <div className="flex justify-between items-center pb-4 md:p-6 border-none rounded-br-[40px] rounded-tl-[10px] bg-gradient-to-r from-purple-600 to-fuchsia-600 border-gray-700">
         <div>
-          <h2 className="font-bold tracking-tight text-2xl text-white">EduMate</h2>
-          <p className="text-sm text-blue-400">Your Partner in Personalized Learning</p>
+          <h2 className="font-bold tracking-tight text-3xl text-white">EduMate</h2>
+          <p className="text-sm text-white font-light">Your Partner in Personalized Learning</p>
         </div>
         <button
           onClick={() => setVisible(false)}
-          className="text-gray-400 hover:text-white transition-colors"
+          className="text-slate-400 hover:text-gray-950 transition-colors"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6"
             fill="none"
             viewBox="0 0 24 24"
-            stroke="currentColor"
+            stroke="currentcolor"
           >
             <path
               strokeLinecap="round"
@@ -202,7 +203,7 @@ const ChatBox = ({ visible, setVisible }) => {
         </button>
       </div>
 
-      <div className="flex-grow overflow-y-auto pr-4 space-y-4 my-4">
+      <div className="flex-grow overflow-y-auto pr-4 space-y-4 my-4 p-3">
         {messages.length === 0 && (
           <div className="daisychat daisychat-start">
             <div className="daisychat-image avatar">
@@ -210,7 +211,7 @@ const ChatBox = ({ visible, setVisible }) => {
                 <img alt="ChatBot" src="./images/chatbot.png" className="rounded-full" />
               </div>
             </div>
-            <div className="daisychat-bubble bg-gray-800 text-white">
+            <div className="daisychat-bubble bg-[#ecf3f9] text-gray-900 font-medium">
               Welcome,{' '}
               <span className="text-blue-400 font-semibold">
                 {profileDetails?.obj?.profile?.name.substring(0, 5) +
@@ -237,9 +238,11 @@ const ChatBox = ({ visible, setVisible }) => {
               </div>
             </div>
             <div
-              className={`daisychat-bubble ${
-                message.type === 'user' ? 'bg-blue-600' : 'bg-gray-800'
-              } text-white`}
+              className={` ${
+                message.type === 'user'
+                  ? ' daisychat-bubble bg-gradient-to-tr from-orange-400 to-fuchsia-900 text-white font-medium before:bg-gradient-to-l from-black/30 to-fuchsia-500'
+                  : 'daisychat-bubble bg-[#ecf3f9] text-gray-900 font-medium'
+              } `}
             >
               {message.content}
             </div>
@@ -253,6 +256,9 @@ const ChatBox = ({ visible, setVisible }) => {
               <div className="flex items-center justify-center mb-4 flex-col">
                 <h3 className="text-lg font-semibold">{profileDetails?.obj?.profile?.name}</h3>
               </div>
+              {/* <div className="grid grid-cols-2 gap-4">
+                <img src={atob(selectedSubject?.pie_chart_base64)} alt="pie chart" />
+              </div> */}
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold">{selectedSubject.subject_name}</h3>
                 <div
@@ -341,7 +347,7 @@ const ChatBox = ({ visible, setVisible }) => {
 
         {/* Error Message */}
         {error && (
-          <div className="p-3 bg-red-900 border border-red-700 text-red-100 rounded-lg">
+          <div className="p-2 text-sm bg-red-900 border border-red-700 text-red-100 rounded-md">
             <p>{error}</p>
           </div>
         )}
@@ -356,14 +362,14 @@ const ChatBox = ({ visible, setVisible }) => {
                 <img alt="EduMate chatbot" src="./images/chatbot.png" className="rounded-full" />
               </div>
             </div>
-            <div className="daisychat-bubble bg-gray-800 text-white">
+            <div className="daisychat-bubble bg-[#ecf3f9] text-gray-900 font-medium">
               <p className="mb-2">Select an option:</p>
               <div className="grid grid-cols-2 gap-2">
                 {predefinedMessages.map((message, index) => (
                   <button
                     key={index}
                     onClick={() => handleMessageClick(message)}
-                    className="bg-gray-700 hover:bg-gray-600 text-white text-xs md:text-sm py-2 px-3 rounded-lg transition-colors duration-200"
+                    className="bg-indigo-100 hover:bg-violet-200 text-gray-900 font-medium text-xs md:text-sm py-2 px-3 rounded-lg transition-colors duration-200"
                   >
                     {message.text}
                   </button>
@@ -381,14 +387,14 @@ const ChatBox = ({ visible, setVisible }) => {
                 <img alt="EduMate chatbot" src="./images/chatbot.png" className="rounded-full" />
               </div>
             </div>
-            <div className="daisychat-bubble bg-gray-800 text-white">
+            <div className="daisychat-bubble bg-[#ecf3f9] text-gray-900 font-medium">
               <p className="mb-2">Select a subject:</p>
               <div className="grid grid-cols-2 gap-2">
                 {subjects.map((sub) => (
                   <button
                     key={sub.slug}
                     onClick={() => handleSubjectSelection(sub.slug)}
-                    className="bg-gray-700 hover:bg-gray-600 text-white text-xs md:text-sm py-2 px-3 rounded-lg transition-colors duration-200"
+                    className="bg-indigo-100 hover:bg-violet-200 text-gray-900 font-medium text-xs md:text-sm py-2 px-3 rounded-lg transition-colors duration-200"
                   >
                     {sub.subject_name}
                   </button>
